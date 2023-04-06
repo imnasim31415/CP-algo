@@ -2,51 +2,34 @@
 using namespace std;
 #define LL long long
 #define pb push_back
-LL M=1e9+9,P=31, p_Pow[100005], invPow[100005];
+
+LL M=1e9+9,P=27, p_Pow[1000005], invPow[1000005];
+LL Hash[1000005];
 LL binpow(LL a,LL b)
 {
      LL ret=1;
     while(b)
-    { if(b&1)ret=(ret*a)%M; a=(a*a)%M;  b>>=1; } 
+    { if(b&1)ret=(ret*a)%M; a=(a*a)%M;  b>>=1; }
     return ret;
 }
 void precalc()
 {
     p_Pow[0]=1;
     invPow[0]=1;
-    for(int i=1;i<=100002;i++)
+    for(int i=1;i<=1000002;i++)
     {
         p_Pow[i]=(p_Pow[i-1]*P)%M;
         invPow[i]=(binpow(p_Pow[i],M-2)%M);
+        Hash[i]=0;
     }
 }
-LL Hash(string st)
+LL sub_hash(LL i,LL j)
 {
-    LL val=0;
-    for(int i=0;i<st.size();i++)
-    {
-        LL x=st[i]-'a'+1;
-        x=(x*p_Pow[i])%M;
-        val=(val+x)%M;
-    }
+    LL val=(Hash[j]+M-Hash[i])%M;
+    val=(val*invPow[i])%M;
     return val;
 }
-LL sub_hash(string st,LL i,LL j)
-{
-    
-//    this one is more optimal
-//    LL val=(sub_hash(str,0,j)-sub_hash(str,0,i-1))%M;
-//    val=(val*invPow[i])%M;
 
-    LL val=0;
-    for(int k=i;k<=j;k++)
-    {
-        LL x=st[k]-'a'+1;
-        x=(x*p_Pow[k-i])%M;
-        val=(val+x)%M;
-    }
-    return val;
-}
 LL diff_sub_string(string st)
 {
     LL c=0,n=st.size();
