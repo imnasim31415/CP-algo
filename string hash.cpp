@@ -12,6 +12,17 @@ LL binpow(LL a,LL b)
     { if(b&1)ret=(ret*a)%M; a=(a*a)%M;  b>>=1; }
     return ret;
 }
+LL Hash(string st)
+{
+    LL val=0;
+    for(int i=0;i<st.size();i++)
+    {
+        LL x=st[i]-'a'+1;
+        x=(x*p_Pow[i])%M;
+        val=(val+x)%M;
+    }
+    return val;
+}
 void precalc()
 {
     p_Pow[0]=1;
