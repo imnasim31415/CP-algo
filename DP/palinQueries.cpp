@@ -1,3 +1,4 @@
+
 #include <bits/stdc++.h>
 #include<ext/pb_ds/tree_policy.hpp>
 #include<ext/pb_ds/assoc_container.hpp>
@@ -47,44 +48,37 @@ LL binpow(LL a,LL b){LL r=1;while(b>0){if(b&1)r=r*a;a=a*a;b>>=1;}return r;}
 LL binpow(LL a,LL b,LL m){a%=m;LL r=1;while(b>0){if(b&1) r=r*a%m;a=a*a%m; b>>=1;}return r;}
 template<typename T>inline T gcd(T a,T b){if(a<0)return gcd(-a,b);if(b<0)return gcd(a,-b);return (b==0)?a:gcd(b,a%b);}
 template<typename T>inline T lcm(T a,T b) {if(a<0)return lcm(-a,b);if(b<0)return lcm(a,-b);return a*(b/gcd(a,b));}
-LL coins[200005];
-LL dp[200005];
-LL minCoin(LL n,LL x)
-{
-    if(x==0) return 0;
-    if(dp[x]!=-1) return dp[x];
-
-    LL c=MX;
-    for(int i=0;i<n;i++)
-    {
-        if(x>=coins[i])
-            c=min(c,1+minCoin(n,x-coins[i]));
-    }
-    dp[x]=c;
-    return c;
-}
+bool dp[1003][1003];
 int main()
 {
 //    fast;
-    LL i,j,k,n,m,l,s=0,x,y,tc=1,p,q,a,b,c=0,d;
+    LL i,j,k,n,m,l,r,s=0,x,y,tc=1,p,q,a,b,c=0,d;
     bool f=0,ff=0;string st,sa,sb,sc; char ch;
-    while(cin>>n>>x)
+    // tell if a given substring of [l,r] is
+    // palindrome or not
+    // bottom up
+    // complexity NxN
+    while(cin>>st>>m)
     {
-        rep(i,n)cin>>coins[i];
-        mem(dp,-1);
+        for(i=1;i<=st.sz;i++)
+            dp[i][i]=1;
 
-        cout<<minCoin(n,x)<<en;
-
-        rep(i,x+5)dp[i]=11111;
-        dp[0]=0;
-        for(i=0;i<=x;i++)
+        for(int len=2;len<=st.sz;len++)
         {
-            for(j=0;j<n;j++)
+            for(i=0;i+len-1<n;i++)
             {
-                p=coins[j];
-                dp[i+p]=min(dp[i+p],1+dp[i]);
+                LL start=i,end=i+len-1;
+                if(len==2)
+                    dp[start][end]=(st[start]==st[end]);
+                else
+                    dp[start][end]=(st[start]==st[end])&&(dp[start+1][end-1]);
             }
         }
-        cout<<dp[x]<<en;
+
+        while(m--)
+        {
+            cin>>l>>r;
+            cout<<dp[l-1][r-1]<<en;
+        }
     }
 }

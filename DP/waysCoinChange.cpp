@@ -47,44 +47,36 @@ LL binpow(LL a,LL b){LL r=1;while(b>0){if(b&1)r=r*a;a=a*a;b>>=1;}return r;}
 LL binpow(LL a,LL b,LL m){a%=m;LL r=1;while(b>0){if(b&1) r=r*a%m;a=a*a%m; b>>=1;}return r;}
 template<typename T>inline T gcd(T a,T b){if(a<0)return gcd(-a,b);if(b<0)return gcd(a,-b);return (b==0)?a:gcd(b,a%b);}
 template<typename T>inline T lcm(T a,T b) {if(a<0)return lcm(-a,b);if(b<0)return lcm(a,-b);return a*(b/gcd(a,b));}
-LL coins[200005];
+vi coins;
 LL dp[200005];
-LL minCoin(LL n,LL x)
+LL fun(LL n,LL prev)
 {
-    if(x==0) return 0;
-    if(dp[x]!=-1) return dp[x];
-
-    LL c=MX;
-    for(int i=0;i<n;i++)
+    dp[0]=1;
+    for(auto x:coins)
     {
-        if(x>=coins[i])
-            c=min(c,1+minCoin(n,x-coins[i]));
+        for(int i=x;i<=n;i++)
+            dp[i]+=dp[i-x];
     }
-    dp[x]=c;
-    return c;
+    return dp[n];
 }
 int main()
 {
 //    fast;
     LL i,j,k,n,m,l,s=0,x,y,tc=1,p,q,a,b,c=0,d;
     bool f=0,ff=0;string st,sa,sb,sc; char ch;
-    while(cin>>n>>x)
+
+    // number of ways to make sum n
+    // out of m coins
+    while(cin>>n>>m)
     {
-        rep(i,n)cin>>coins[i];
-        mem(dp,-1);
-
-        cout<<minCoin(n,x)<<en;
-
-        rep(i,x+5)dp[i]=11111;
-        dp[0]=0;
-        for(i=0;i<=x;i++)
+        rep(i,m)
         {
-            for(j=0;j<n;j++)
-            {
-                p=coins[j];
-                dp[i+p]=min(dp[i+p],1+dp[i]);
-            }
+            cin>>x;
+            coins.pb(x);
         }
-        cout<<dp[x]<<en;
+        sort(all(coins));
+        mem(dp,0);
+
+        cout<<fun(n,0)<<en;
     }
 }
